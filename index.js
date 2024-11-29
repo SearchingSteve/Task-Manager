@@ -44,7 +44,7 @@ app.get("/", (request, response) => {
 
 // GET /tasks - Get all tasks
 app.get("/tasks", (request, response) => {
-  client.query("SELECT * FROM task", (err, result) => {
+  client.query("SELECT * FROM tasks", (err, result) => {
     if (err) {
       console.error(err);
       res.status(500).json({ error: err });
