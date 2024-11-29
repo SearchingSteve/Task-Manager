@@ -47,10 +47,10 @@ app.get("/tasks", (request, response) => {
   client.query("SELECT * FROM tasks", (err, result) => {
     if (err) {
       console.error(err);
-      res.status(500).json({ error: err });
+      response.status(500).json({ error: err });
       return;
     }
-    res.json(result.rows);
+    response.json(result.rows);
   });
 });
 
@@ -58,7 +58,7 @@ app.get("/tasks", (request, response) => {
 app.post("/tasks", (request, response) => {
   const { description, status } = request.body;
   if (!description || !status) {
-    return res.status(400).json({ error: "All fields are required" });
+    return response.status(400).json({ error: "All fields are required" });
   }
 
   client.query(
@@ -69,7 +69,7 @@ app.post("/tasks", (request, response) => {
         console.error("Error inserting task:", err);
         return response.status(500).send("Server error");
       }
-      res;
+      response;
     }
   );
   response.status(201).json({ message: "Task added successfully" });
@@ -79,25 +79,62 @@ app.post("/tasks", (request, response) => {
 app.put("/tasks/:id", (request, response) => {
   const taskId = parseInt(request.params.id, 10);
   const { status } = request.body;
-  const task = tasks.find((t) => t.id === taskId);
 
-  if (!task) {
-    return response.status(404).json({ error: "Task not found" });
+  // Check if the status is provided
+  if (status === undefined) {
+    return response.status(400).json({ error: "Status is required" });
   }
-  task.status = status;
-  response.json({ message: "Task updated successfully" });
+
+  try {
+    // Update the task's status in the database
+    const query = "UPDATE tasks SET status = $1 WHERE id = $2";
+    const values = [status, taskId];
+
+    client.query(query, values, (err, result) => {
+      if (err) {
+        console.error("Error updating task:", err);
+        return response.status(500).send("Server error");
+      }
+
+      if (result.rowCount === 0) {
+        return response.status(404).json({ error: "Task not found" });
+      }
+
+      response.json({ message: "Task updated successfully" });
+    });
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    response.status(500).json({ error: "Server error" });
+  }
 });
 
 // DELETE /tasks/:id - Delete a task
 app.delete("/tasks/:id", (request, response) => {
+  // PUT /tasks/:id - Update a task's status
   const taskId = parseInt(request.params.id, 10);
-  const initialLength = tasks.length;
-  tasks = tasks.filter((t) => t.id !== taskId);
+  const { status } = request.body;
 
-  if (tasks.length === initialLength) {
-    return response.status(404).json({ error: "Task not found" });
+  try {
+    // Delete the task in the database
+    const query = "DELETE FROM tasks WHERE id = $1";
+    const values = [taskId];
+
+    client.query(query, values, (err, result) => {
+      if (err) {
+        console.error("Error updating task:", err);
+        return response.status(500).send("Server error");
+      }
+
+      if (result.rowCount === 0) {
+        return response.status(404).json({ error: "Task not found" });
+      }
+
+      response.json({ message: "Task successfully deleted" });
+    });
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    response.status(500).json({ error: "Server error" });
   }
-  response.json({ message: "Task deleted successfully" });
 });
 
 app.listen(PORT, () => {
