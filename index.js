@@ -69,10 +69,9 @@ app.post("/tasks", (request, response) => {
         console.error("Error inserting task:", err);
         return response.status(500).send("Server error");
       }
-      response;
+      response.status(201).json({ message: "Task added successfully", id: result.rows[0].id });
     }
   );
-  response.status(201).json({ message: "Task added successfully" });
 });
 
 // PUT /tasks/:id - Update a task's status
@@ -121,7 +120,7 @@ app.delete("/tasks/:id", (request, response) => {
 
     client.query(query, values, (err, result) => {
       if (err) {
-        console.error("Error updating task:", err);
+        console.error("Error deleting task:", err);
         return response.status(500).send("Server error");
       }
 
