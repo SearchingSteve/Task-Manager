@@ -1,95 +1,137 @@
-# Express Task Manager
-This repository serves as a **template** for the Task Manager application, used in your assignment. It provides a basic Express.js app with in-memory storage to manage tasks. Your task is to extend this application by integrating it with a PostgreSQL database.
 
-## Setup Instructions  
+# Express Task Manager & MongoDB Queries
 
-### Prerequisites  
-- [Node.js](https://nodejs.org) installed on your machine.  
-- A code editor, such as [VSCode](https://code.visualstudio.com/).
+## Project Overview
 
-## How to Use this Template  
+This project demonstrates the integration of **PostgreSQL** with a Node.js application. It features a RESTful API built using Express.js to manage tasks. This project also features MongoDB queries to interact with a books collection. The project is designed to showcase efficient database operations and query handling.
 
-This repository is set up as a **GitHub template** to help you quickly create your own version of the **Task Manager**.  
-
-### Steps to Create Your Own Repository  
-
-1. **Click the "Use this template" button** at the top of this page on GitHub.  
-
-1. **Name your new repository** and choose its visibility (public or private).  
-
-1. Once your repository is created, **clone your new repo** to your local machine:  
-    ```bash  
-    git clone <your-new-repo-url>  
-    ```  
-
-1. Navigate into the project directory and install the necessary dependencies:  
-    ```bash  
-    cd <your-new-repo-name>  
-    npm install  
-    ```  
-
-1. **Run the app:**  
-    ```bash  
-    npm start  
-    ```  
-    This will start the server at `http://localhost:3000/`.  
-
-1. You can now begin working on your project, adding your own code and committing your changes as you go:  
-    ```bash  
-    git add .  
-    git commit -m "First commit"  
-    git push origin main  
-    ```  
+---
 
 ## Features
 
-The application currently includes the following functionality using in-memory storage:
+### Express Task Manager
 
-- Retrieve all tasks.
-- Add a new task.
-- Update a task's status.
-- Delete a task.
+1. **Database Setup**  
+   - Automatically creates a `tasks` table in PostgreSQL with fields for `id`, `description`, and `status`. 
 
-Your assignment is to replace the in-memory storage with a PostgreSQL database.
+2. **RESTful API Routes**  
+   - `GET /tasks`: Retrieves all tasks from the database.  
+   - `POST /tasks`: Adds a new task to the database.  
+   - `PUT /tasks/:id`: Updates the status of a specific task.  
+   - `DELETE /tasks/:id`: Deletes a specific task.
 
-## API Endpoints
+### MongoDB Book System Queries
 
-### **Get all tasks**
-- **Method:** `GET`
-- **Endpoint:** `/tasks`
-- **Description:** Retrieves all tasks.
+1. **Collection Management**  
+   - Creates a `books` collection in MongoDB and inserts sample data.
 
-### **Add a new task**
-- **Method:** `POST`
-- **Endpoint:** `/tasks`
-- **Body Parameters:**
-  - `id`: Unique identifier for the task (number).
-  - `description`: Description of the task (string).
-  - `status`: Status of the task (`incomplete` or `complete`).
+2. **Data Queries**  
+   - Retrieves the titles of all books.  
+   - Finds all books by a specific author.  
+   - Updates the genre of a specific book.  
+   - Deletes a specific book.
 
-### **Update a task's status**
-- **Method:** `PUT`
-- **Endpoint:** `/tasks/:id`
-- **Body Parameters:**
-  - `status`: New status for the task (`incomplete` or `complete`).
+   > **Note:** The MongoDB queries should be run one at a time to avoid unintended interactions and ensure proper execution.
 
-### **Delete a task**
-- **Method:** `DELETE`
-- **Endpoint:** `/tasks/:id`
+---
 
-## Assignment Instructions
+## Getting Started
 
-### Part 1: PostgreSQL Integration
+### Prerequisites
 
-1. Replace the `tasks` array in the code with a PostgreSQL database table. Ensure a method exists in the code to create that table if it does not already exist
-1. Update the application to interact with the PostgreSQL database:
-   - **GET /tasks:** Fetch all tasks from the database.
-   - **POST /tasks:** Add a new task to the database.
-   - **PUT /tasks/:id:** Update the status of a specific task in the database.
-   - **DELETE /tasks/:id:** Delete a specific task from the database.
+- Node.js installed  
+- PostgreSQL installed and running  
+- MongoDB installed and running  
 
-### Submission Requirements
+---
 
-- Push all your changes to your repository.
-- Ensure your application runs correctly with `npm start`
-- Include all required functionality as specified in the assignment description.
+### Installation
+
+#### Express Task Manager
+
+1. Clone the repository:  
+   ```
+   git clone https://github.com/SearchingSteve/QAP3-DB-Sem3
+   cd QAP3-DB-SEM3
+   ```
+
+2. Install dependencies:  
+   ```
+   npm install
+   ```
+
+3. Configure the PostgreSQL database connection in `index.js`:  
+   ```javascript
+   const client = new Client({
+     connectionString: "postgres://your_user:your_password@localhost:5432/your_db_name",
+   });
+   ```
+
+4. Start the server:  
+   ```
+   node index.js
+   ```
+
+5. The server will run at:  
+   `http://localhost:3000/`
+
+---
+
+### MongoDB Book System Queries
+
+1. Open your MongoDB shell or GUI client.
+
+2. Create a `books` collection and insert sample data:  
+   ```
+   db.books.insertMany([
+       { title: "The Hobbit", author: "J.R.R. Tolkien", genre: "Fantasy", publishedYear: 1937 },
+       { title: "To Kill a Mockingbird", author: "Harper Lee", genre: "Fiction", publishedYear: 1960 },
+       { title: "1984", author: "George Orwell", genre: "Dystopian", publishedYear: 1949 }
+   ])
+   ```
+
+3. Execute the following queries one at a time:  
+   - Retrieve the titles of all books:  
+     ```
+     db.books.find({}, { title: 1, _id: 0 })
+     ```
+
+   - Find all books by "J.R.R. Tolkien":  
+     ```
+     db.books.find({ author: "J.R.R. Tolkien" })
+     ```
+
+   - Update the genre of "1984" to "Science Fiction":  
+     ```
+     db.books.updateOne(
+         { title: "1984" },
+         { $set: { genre: "Science Fiction" } }
+     )
+     ```
+
+   - Delete "The Hobbit":  
+     ```
+     db.books.deleteOne({ title: "The Hobbit" })
+     ```
+
+     - Retrieve the titles and genres of all books
+```
+db.books.find({}, { title: 1, genre: 1, _id: 0 });
+```
+
+
+---
+
+
+
+## License
+
+This project is provided for **personal use only**. Redistribution, modification, or commercial use in any form is strictly prohibited without prior written permission from the author.
+
+For detailed license terms, refer to the [LICENSE](./LICENSE.md) file.
+
+## Author
+**[Stephen Crocker](https://github.com/SearchingSteve)** 
+
+
+
