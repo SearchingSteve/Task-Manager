@@ -14,11 +14,65 @@ This project demonstrates the integration of **PostgreSQL** with a Node.js appli
 1. **Database Setup**  
    - Automatically creates a `tasks` table in PostgreSQL with fields for `id`, `description`, and `status`. 
 
-2. **RESTful API Routes**  
-   - `GET /tasks`: Retrieves all tasks from the database.  
-   - `POST /tasks`: Adds a new task to the database.  
-   - `PUT /tasks/:id`: Updates the status of a specific task.  
-   - `DELETE /tasks/:id`: Deletes a specific task.
+2 **RESTful API Routes**
+
+- **`GET /tasks`**: Retrieves all tasks from the database.
+  - **Testing**: Use a tool like Postman or Thunder to send a GET request to `http://localhost:3000/tasks`.
+  - **Expected Response**: A JSON array containing all tasks in the database, each with fields: `id`, `description`, and `status`.
+
+- **`POST /tasks`**: Add new tasks to the database.
+  - **Testing**: Send a POST request to `http://localhost:3000/tasks` with a JSON body containing the new task details.
+  - **JSON Fields**:
+    ```json
+    {
+      "description": "Your task description here",
+      "status": "Your task status here (e.g., 'pending', 'completed')"
+    }
+    ```
+  - **Expected Response**: A JSON object with a success message and the ID of the newly created task:
+    ```json
+    {
+      "message": "Task added successfully",
+      "id": 1 // ID of the new task
+    }
+    ```
+
+- **`PUT /tasks/:id`**: Updates the status of a specific task.
+  - **Testing**: Send a PUT request to `http://localhost:3000/tasks/{id}`, replacing `{id}` with the ID of the task you want to update.
+  - **JSON Fields**:
+    ```json
+    {
+      "status": "New status here (e.g., 'in progress', 'completed')"
+    }
+    ```
+  - **Expected Response**: A JSON object with a success message:
+    ```json
+    {
+      "message": "Task updated successfully"
+    }
+    ```
+  - **Error Handling**: If the task ID does not exist, the response will be:
+    ```json
+    {
+      "error": "Task not found"
+    }
+    ```
+
+- **`DELETE /tasks/:id`**: Deletes a specific task.
+  - **Testing**: Send a DELETE request to `http://localhost:3000/tasks/{id}`, replacing `{id}` with the ID of the task you want to delete.
+  - **Expected Response**: A JSON object with a success message:
+    ```json
+    {
+      "message": "Task successfully deleted"
+    }
+    ```
+  - **Error Handling**: If the task ID does not exist, the response will be:
+    ```json
+    {
+      "error": "Task not found"
+    }
+    ```
+
 
 ### MongoDB Book System Queries
 
