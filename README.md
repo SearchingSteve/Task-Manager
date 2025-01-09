@@ -182,7 +182,7 @@ db.books.find({}, { title: 1, genre: 1, _id: 0 });
 
 This project is provided for **personal use only**. Redistribution, modification, or commercial use in any form is strictly prohibited without prior written permission from the author.
 
-For detailed license terms, refer to the [LICENSE](./LICENSE.md) file.
+For detailed license terms, refer to the [LICENSE](LICENSE.MD) file.
 
 ## Author
 **[Stephen Crocker](https://github.com/SearchingSteve)** 
