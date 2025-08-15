@@ -1,23 +1,24 @@
 
-# Express Task Manager & MongoDB Queries
+# Express Task Manager API
 
 ## Project Overview
 
-This project demonstrates the integration of **PostgreSQL** with a Node.js application. It features a RESTful API built using Express.js to manage tasks. This project also features MongoDB queries to interact with a books collection. The project is designed to showcase efficient database operations and query handling.
+This project is a **PostgreSQL-based task management REST API** built with Node.js and Express.js. It provides a simple and efficient way to manage tasks through HTTP endpoints, with automatic database table creation and full CRUD operations.
 
 ---
 
 ## Features
 
-### Express Task Manager
+### Task Management API
 
 1. **Database Setup**  
-   - Automatically creates a `tasks` table in PostgreSQL with fields for `id`, `description`, and `status`. 
+   - Automatically creates a `tasks` table in PostgreSQL with fields for `id`, `description`, and `status`
+   - No manual database setup required
 
-2 **RESTful API Routes**
+2. **RESTful API Routes**
 
 - **`GET /tasks`**: Retrieves all tasks from the database.
-  - **Testing**: Use a tool like Postman or Thunder to send a GET request to `http://localhost:3000/tasks`.
+  - **Testing**: Use a tool like Postman, Thunder, or curl to send a GET request to `http://localhost:3000/tasks`.
   - **Expected Response**: A JSON array containing all tasks in the database, each with fields: `id`, `description`, and `status`.
 
 - **`POST /tasks`**: Add new tasks to the database.
@@ -73,20 +74,6 @@ This project demonstrates the integration of **PostgreSQL** with a Node.js appli
     }
     ```
 
-
-### MongoDB Book System Queries
-
-1. **Collection Management**  
-   - Creates a `books` collection in MongoDB and inserts sample data.
-
-2. **Data Queries**  
-   - Retrieves the titles of all books.  
-   - Finds all books by a specific author.  
-   - Updates the genre of a specific book.  
-   - Deletes a specific book.
-
-   > **Note:** The MongoDB queries should be run one at a time to avoid unintended interactions and ensure proper execution.
-
 ---
 
 ## Getting Started
@@ -95,18 +82,15 @@ This project demonstrates the integration of **PostgreSQL** with a Node.js appli
 
 - Node.js installed  
 - PostgreSQL installed and running  
-- MongoDB installed and running  
 
 ---
 
 ### Installation
 
-#### Express Task Manager
-
 1. Clone the repository:  
    ```
-   git clone https://github.com/SearchingSteve/QAP3-DB-Sem3
-   cd QAP3-DB-SEM3
+   git clone <repository-url>
+   cd Task-Manager
    ```
 
 2. Install dependencies:  
@@ -120,63 +104,98 @@ This project demonstrates the integration of **PostgreSQL** with a Node.js appli
      connectionString: "postgres://your_user:your_password@localhost:5432/your_db_name",
    });
    ```
+   
+   **Replace the connection string with your actual PostgreSQL credentials:**
+   - `your_user`: Your PostgreSQL username
+   - `your_password`: Your PostgreSQL password  
+   - `localhost:5432`: Your PostgreSQL host and port
+   - `your_db_name`: Your database name
 
 4. Start the server:  
    ```
-   node index.js
+   npm start
    ```
+   
+   The server will run with auto-reload enabled (using `node --watch`).
 
-5. The server will run at:  
+5. The server will be available at:  
    `http://localhost:3000/`
 
 ---
 
-### MongoDB Book System Queries
+## API Testing with Postman
 
-1. Open your MongoDB shell or GUI client.
+The easiest way to test this API is using **Postman**, a popular API testing tool. We've included a ready-to-use Postman collection with all the endpoints pre-configured.
 
-2. Create a `books` collection and insert sample data:  
+### Getting Started with Postman
+
+1. **Download Postman**: Visit [postman.com](https://www.postman.com/downloads/) and download the desktop app for your operating system.
+
+2. **Import the Collection**: 
+   - Open Postman
+   - Click "Import" in the top left
+   - Select the `Task-Manager-API.postman_collection.json` file from this project
+   - The collection will be imported with all endpoints ready to use
+
+3. **Start Your Server**: Make sure your Task Manager API is running:
+   ```bash
+   npm start
    ```
-   db.books.insertMany([
-       { title: "The Hobbit", author: "J.R.R. Tolkien", genre: "Fantasy", publishedYear: 1937 },
-       { title: "To Kill a Mockingbird", author: "Harper Lee", genre: "Fiction", publishedYear: 1960 },
-       { title: "1984", author: "George Orwell", genre: "Dystopian", publishedYear: 1949 }
-   ])
-   ```
 
-3. Execute the following queries one at a time:  
-   - Retrieve the titles of all books:  
-     ```
-     db.books.find({}, { title: 1, _id: 0 })
-     ```
+4. **Test the Endpoints**: The collection includes these pre-configured requests:
+   - **Get All Tasks** - Lists all tasks in the database
+   - **Create New Task** - Adds a new task (modify the JSON body as needed)
+   - **Update Task Status** - Updates a task's status (change the ID in the URL)
+   - **Delete Task** - Removes a task (change the ID in the URL)
+   - **Get API Welcome** - Tests if the server is running
 
-   - Find all books by "J.R.R. Tolkien":  
-     ```
-     db.books.find({ author: "J.R.R. Tolkien" })
-     ```
+### Using the Collection
 
-   - Update the genre of "1984" to "Science Fiction":  
-     ```
-     db.books.updateOne(
-         { title: "1984" },
-         { $set: { genre: "Science Fiction" } }
-     )
-     ```
+- **Base URL**: The collection uses a variable `{{base_url}}` set to `http://localhost:3000`
+- **Modify Task IDs**: For update/delete operations, change the `1` in the URL to the actual task ID
+- **Customize Request Bodies**: Edit the JSON in the request body to create different tasks or status updates
 
-   - Delete "The Hobbit":  
-     ```
-     db.books.deleteOne({ title: "The Hobbit" })
-     ```
+### Example Workflow
 
-     - Retrieve the titles and genres of all books
-```
-db.books.find({}, { title: 1, genre: 1, _id: 0 });
-```
+1. **Test Server**: Start with "Get API Welcome" to ensure the server is running
+2. **Create Tasks**: Use "Create New Task" to add several tasks (modify the JSON body each time)
+3. **List Tasks**: Use "Get All Tasks" to see all created tasks and their IDs
+4. **Update Status**: Use "Update Task Status" with a specific task ID to change its status
+5. **Delete Tasks**: Use "Delete Task" with a specific task ID to remove tasks
 
+### Alternative Testing Tools
+
+If you prefer other tools, you can also use:
+- **Thunder Client** (VS Code extension)
+- **Insomnia** (cross-platform API client)
+- **curl** (command line)
+
+For curl examples, see the [curl documentation](https://curl.se/docs/tutorial.html) or use the Postman collection as a reference for the correct endpoints and request formats.
 
 ---
 
+## Database Schema
 
+The application automatically creates a `tasks` table with the following structure:
+
+```sql
+CREATE TABLE tasks (
+  id SERIAL PRIMARY KEY,
+  description TEXT NOT NULL,
+  status TEXT NOT NULL
+);
+```
+
+---
+
+## Dependencies
+
+- **express**: Web framework for Node.js
+- **pg**: PostgreSQL client for Node.js
+- **@types/express**: TypeScript definitions for Express
+- **@types/pg**: TypeScript definitions for pg
+
+---
 
 ## License
 
@@ -184,11 +203,6 @@ This project is provided for **personal use only**. Redistribution, modification
 
 For detailed license terms, refer to the [LICENSE](LICENSE.MD) file.
 
-## Author
-**[Stephen Crocker](https://github.com/SearchingSteve)** 
-
-## Dated
-November 5, 2024
 
 
 
